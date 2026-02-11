@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}
+Здачі — {{ assignment.title }}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2 class="mb-3">
+        📄 Здачі завдання: <br>
+        <small class="text-muted">{{ assignment.title }}</small>
+    </h2>
+
+    <p class="text-muted">
+        Урок: {{ assignment.lesson.title }}
+    </p>
+
+    <hr>
+
+    {% if submissions %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Студент</th>
+                        <th>Дата здачі</th>
+                        <th>Робота</th>
+                        <th>Оцінка</th>
+                        <th>Дія</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for submission in submissions %}
+                    <tr>
+                        <td>
+                            {{ submission.student.username }}
+                        </td>
+
+                        <td>
+                            {{ submission.created_at|date:"d.m.Y H:i" }}
+                        </td>
+
+                        <td>
+                            {% if submission.file %}
+                                <a href="{{ submission.file.url }}" target="_blank">
+                                    📎 Файл
+                                </a>
+                            {% elif submission.text %}
+                                <span class="text-muted">Текстова відповідь</span>
+                            {% else %}
+                                <span class="text-danger">Немає даних</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if submission.grade %}
+                                <strong>{{ submission.grade }}</strong>
+                            {% else %}
+                                <span class="text-muted">Не оцінено</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <a href="{% url 'grade-submission' submission.id %}"
+                               class="btn btn-sm btn-outline-primary">
+                                ✏️ Оцінити
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-muted">
+            Ще немає жодної здачі.
+        </p>
+    {% endif %}
+
+    <hr>
+
+
+
+</div>
+{% endblock %}

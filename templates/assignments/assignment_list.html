@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Список завдань</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Назва</th>
+            <th>Урок</th>
+            <th>Курс</th>
+            <th>Термін</th>
+            <th>Дія</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for assignment in assignments %}
+        <tr>
+            <td>{{ assignment.title }}</td>
+            <td>{{ assignment.lesson.title }}</td>
+            <td>{{ assignment.lesson.course.title }}</td>
+            <td>{{ assignment.deadline|date:"d.m.Y H:i" }}</td>
+            <td>
+                <a href="{% url 'assignment-detail' assignment.pk %}" class="btn btn-primary btn-sm">
+                    Переглянути
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">Завдань поки що немає</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

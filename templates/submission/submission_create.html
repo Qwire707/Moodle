@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        📤 Здача завдання
+                    </h4>
+                </div>
+
+                <div class="card-body">
+
+                    <h5 class="mb-3">
+                        Завдання: <strong>{{ assignment.title }}</strong>
+                    </h5>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- File Upload -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                Файл роботи
+                            </label>
+                            {{ form.file }}
+                            {% if form.file.errors %}
+                                <div class="text-danger small">
+                                    {{ form.file.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Comment -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                Коментар
+                            </label>
+                            {{ form.comment }}
+                            {% if form.comment.errors %}
