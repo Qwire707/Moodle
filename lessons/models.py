@@ -5,7 +5,7 @@ from accounts.models import CustomUser
 
 
 class Lesson(models.Model):
-    module = models.ForeignKey(Module, on_delete=models.CASCADE, verbose_name='lessons')
+    module = models.ForeignKey(Module, on_delete=models.CASCADE, verbose_name='lessons', related_name='lessons')
     title = models.CharField(max_length=100)
     content = models.ImageField()
     image = models.ImageField(upload_to='lessons/images/', blank=True, null=True, verbose_name='image')

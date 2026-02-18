@@ -1,10 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}Всі курси{% endblock %}
+{% block content %}
+{% for course in courses %}
+
+<div class="card">
+  <h5 class="card-header">Назва курсу: {{ course.title }}</h5>
+  <div class="card-body">
+    <h5 class="card-title">Опубліковано: {{ course.is_published }}</h5>
+    <p class="card-text">Опис курсу: {{ course.description }}</p>
+    <a href="{% url 'course-detail' course.pk %}" class="btn btn-primary">Детальніше</a>
+  </div>
+</div>
+{% endfor %}
+
+
+
+{% endblock %}

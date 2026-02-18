@@ -1,10 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}Всі курси{% endblock %}
+{% block content %}
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Назва уроку: {{ lesson.title }}</h5>
+    <p class="card-text">Додати метеріал {{ lesson.content }}</p>
+    <div class="mb-3">
+    </div>
+    <p class="card-text"><small class="text-body-secondary">Створено: {{ lesson.created_at|date:'d.m.Y' }}</small></p>
+</div>
+{% for module in course.modules.all %}
+{% endfor %}
+{% endblock %}
