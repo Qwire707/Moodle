@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-j4khq4)se57uz)7$-c0lamq!#m%w^crl_y!huu5k3qt4e#t=bi
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
+ALLOWED_HOSTS = ['.onrender.com']
 
 # Application definition
 
@@ -137,6 +137,6 @@ STATICFILES_STORAGE = 'whitenoise.storage. CompressedManifestStaticFilesStorage'
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-ALLOWED_HOSTS = []
+
 
 
