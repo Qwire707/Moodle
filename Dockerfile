@@ -19,6 +19,5 @@ RUN python manage.py collectstatic -- noinput
 
 EXPOSE 8000
 
-ENTRYPOINT
+ENTRYPOINT ["gunicorn", "core.wsgi", "-b", "0.0.0.0:8000"]
 
-["gunicorn", "Moodle.wsgi", "-b", "0.0.0.0:8000"]
