@@ -16,13 +16,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
-RUN python manage.py collectstatic --noinput
-
 ENV DJANGO_SUPERUSER_USERNAME=admin
 ENV DJANGO_SUPERUSER_PASSWORD=12345
 ENV DJANGO_SUPERUSER_EMAIL=admin@example.com
 
 RUN python manage.py createsuperuser --noinput
+RUN python manage.py collectstatic --noinput
+
 
 EXPOSE 8000
 
