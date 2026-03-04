@@ -18,6 +18,8 @@ COPY . /app/
 
 RUN python manage.py collectstatic --noinput
 
+RUN python manage.py createsuperuser -- noinput -username admin password danya2615:)
+
 EXPOSE 8000
 
 ENTRYPOINT [ "gunicorn", "core.wsgi", "-b", "0.0.0.0:8000" ]
