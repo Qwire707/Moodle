@@ -5,22 +5,58 @@ from django.urls import reverse_lazy
 from accounts.models import CustomUser
 
 
+from django.forms import *
+from .models import CustomUser
+
 class UserRegisterForm(ModelForm):
+
+    password = CharField(widget=PasswordInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Пароль'
+    }))
+
+    password2 = CharField(widget=PasswordInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Повторіть пароль'
+    }))
+
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'first_name', 'last_name', 'password', 'phone', 'avatar', 'bio', 'date_of_birth']
-        widgets = {
-            'username':TextInput(attrs={'class': 'form-control', 'placeholder': 'Нікнейм'}),
-            'email':EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
-            'first_name':TextInput(attrs={'class': 'form-control', 'placeholder': "Ім'я"}),
-            'last_name':TextInput(attrs={'class': 'form-control', 'placeholder': 'Прізвище'}),
-            'password':PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'}),
-            'phone':TextInput(attrs={'class': 'form-control', 'placeholder': 'Номер телефону'}),
-            'avatar':FileInput(attrs={'class': 'form-control'}),
-            'bio':TextInput(attrs={'class': 'form-control', 'placeholder': 'Біографія'}),
-            'date_of_birth':DateInput(attrs={'class': 'form-control'}),
+        fields = [
+            'username', 'email', 'first_name', 'last_name',
+            'password', 'phone', 'avatar', 'bio', 'date_of_birth'
+        ]
 
+        widgets = {
+            'username': TextInput(attrs={'class': 'form-control', 'placeholder': 'Нікнейм'}),
+            'email': EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
+            'first_name': TextInput(attrs={'class': 'form-control', 'placeholder': "Ім'я"}),
+            'last_name': TextInput(attrs={'class': 'form-control', 'placeholder': 'Прізвище'}),
+            'phone': TextInput(attrs={'class': 'form-control', 'placeholder': 'Номер телефону'}),
+            'avatar': FileInput(attrs={'class': 'form-control'}),
+            'bio': TextInput(attrs={'class': 'form-control', 'placeholder': 'Біографія'}),
+            'date_of_birth': DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        password2 = cleaned_data.get("password2")
+
+        if password != password2:
+            raise ValidationError("Паролі не співпадають")
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+
+        if commit:
+            user.save()
+
+        return user
+
 class LoginForm(AuthenticationForm):
     username = CharField(
         label="Логін",
