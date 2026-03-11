@@ -1,86 +1,85 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}
-Здачі — {{ assignment.title }}
-{% endblock %}
+{% block title %}Завдання: {{ lesson.title }}{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container py-4" style="
+    background: linear-gradient(135deg, #1f1c2c 0%, #928dab 100%);
+    min-height: 100vh;
+">
 
-    <h2 class="mb-3">
-        📄 Здачі завдання: <br>
-        <small class="text-muted">{{ assignment.title }}</small>
-    </h2>
+    <!-- Заголовок -->
+    <h3 class="mb-5 text-center" style="
+        color: #bf00ff;
+        text-shadow: 0 0 5px #bf00ff, 0 0 10px #bf00ff, 0 0 20px #bf00ff, 0 0 40px #bf00ff;
+        font-weight: 700;
+        font-size: 2rem;
+    ">
+        📝 Завдання: {{ lesson.title }}
+    </h3>
 
-    <p class="text-muted">
-        Урок: {{ assignment.lesson.title }}
-    </p>
-
-    <hr>
-
-    {% if submissions %}
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Студент</th>
-                        <th>Дата здачі</th>
-                        <th>Робота</th>
-                        <th>Оцінка</th>
-                        <th>Дія</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for submission in submissions %}
-                    <tr>
-                        <td>
-                            {{ submission.student.username }}
-                        </td>
-
-                        <td>
-                            {{ submission.created_at|date:"d.m.Y H:i" }}
-                        </td>
-
-                        <td>
-                            {% if submission.file %}
-                                <a href="{{ submission.file.url }}" target="_blank">
-                                    📎 Файл
-                                </a>
-                            {% elif submission.text %}
-                                <span class="text-muted">Текстова відповідь</span>
-                            {% else %}
-                                <span class="text-danger">Немає даних</span>
-                            {% endif %}
-                        </td>
-
-                        <td>
-                            {% if submission.grade %}
-                                <strong>{{ submission.grade }}</strong>
-                            {% else %}
-                                <span class="text-muted">Не оцінено</span>
-                            {% endif %}
-                        </td>
-
-                        <td>
-                            <a href="{% url 'grade-submission' submission.id %}"
-                               class="btn btn-sm btn-outline-primary">
-                                ✏️ Оцінити
-                            </a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+    <!-- Картка завдання -->
+    <div class="card shadow-sm mb-4" style="
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+    ">
+        <div class="card-body">
+            <p class="text-muted mb-2">
+                Урок: {{ lesson.title }} <br>
+                Створено: {{ lesson.created_at|date:"d.m.Y H:i" }} <br>
+                Оновлено: {{ lesson.updated_at|date:"d.m.Y H:i" }}
+            </p>
+            <p class="card-text">{{ assignment.description }}</p>
+            {% if assignment.submissions.first %}
+            <p class="text-danger fw-semibold">
+                Дедлайн: {{ assignment.submissions.first.deadline|date:"d.m.Y" }}
+            </p>
+            {% endif %}
         </div>
-    {% else %}
-        <p class="text-muted">
-            Ще немає жодної здачі.
-        </p>
-    {% endif %}
+    </div>
 
-    <hr>
+    <!-- Форма здачі завдання -->
+    <div class="card shadow-sm mb-4" style="
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+    ">
+        <div class="card-body">
+            <h5 class="mb-3">📎 Завантажити роботу</h5>
 
+            {% if submission %}
+            <!-- Відображення вже завантаженої роботи -->
+            <div class="mb-3 card p-2 border-secondary">
+                <p class="mb-1 fw-semibold">Ваша робота:</p>
+                <a href="{{ submission.file.url }}" class="btn btn-outline-primary btn-sm" download>
+                    {{ submission.file.name|slice:"11:" }}
+                </a>
+                {% if submission.comment %}
+                <p class="mt-2"><strong>Коментар:</strong> {{ submission.comment }}</p>
+                {% endif %}
+            </div>
+            {% endif %}
 
+            <!-- Форма -->
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Файл роботи</label>
+                    <input class="form-control" type="file" name="file" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Коментар (необовʼязково)</label>
+                    <textarea class="form-control" name="comment" rows="2">{{ submission.comment|default_if_none:"" }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-outline-primary rounded-pill w-100">
+                    Здати роботу
+                </button>
+            </form>
+
+        </div>
+    </div>
 
 </div>
 {% endblock %}

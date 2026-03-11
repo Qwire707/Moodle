@@ -1,70 +1,172 @@
-
 <!doctype html>
+{% load static %}
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <title>{% block title %}{% endblock %}</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous">
+
+<title>{% block title %}{% endblock %}</title>
+
+<style>
+/* Загальний фон сторінки */
+body {
+    background-image: url("{% static 'images/background.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #fff;
+}
+
+/* Прозорі картки */
+.card {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(191,0,255,0.3);
+}
+
+/* Неоновий текст */
+.text-neon {
+    color: #bf00ff;
+    text-shadow:
+        0 0 5px #bf00ff,
+        0 0 10px #bf00ff,
+        0 0 20px #bf00ff;
+}
+
+.text-neon-hover {
+    color: #fff;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.text-neon-hover:hover {
+    color: #bf00ff;
+    text-shadow:
+        0 0 5px #bf00ff,
+        0 0 10px #bf00ff,
+        0 0 20px #bf00ff,
+        0 0 40px #bf00ff;
+}
+
+/* Навбар */
+.navbar {
+    background-color: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(191,0,255,0.5);
+}
+
+/* Кнопки неонові */
+.btn-neon-hover {
+    background-color: #bf00ff;
+    border-color: #bf00ff;
+    transition: 0.3s;
+    color: #fff;
+}
+
+.btn-neon-hover:hover {
+    background-color: #ff00ff;
+    box-shadow: 0 0 10px #bf00ff, 0 0 20px #bf00ff, 0 0 30px #bf00ff;
+    color: #fff;
+}
+
+/* Ефект hover для уроків у списку */
+.lesson-item {
+    transition: all 0.3s;
+    border-radius: 0.25rem;
+}
+
+.lesson-item:hover {
+    background-color: #bf00ff33;
+    box-shadow: 0 0 10px #bf00ff, 0 0 20px #bf00ff, 0 0 30px #bf00ff;
+}
+
+.lesson-link {
+    color: #fff;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.lesson-item:hover .lesson-link {
+    color: #fff;
+    text-shadow:
+        0 0 5px #bf00ff,
+        0 0 10px #bf00ff,
+        0 0 20px #bf00ff,
+        0 0 40px #bf00ff;
+}
+</style>
+
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+<!-- Навбар -->
+<nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'all-courses'%}">Головна</a>
+        <a class="navbar-brand text-neon" href="{% url 'all-courses'%}">Всі курси</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                {% if user.is_authenticated and user.is_superuser %}
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'assignment_list'%}">Список всіх задач</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'submission_list'%}">Список задач на виконання</a>
-                    </li>
-                    {% endif %}
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Пошук" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Пошук</button>
-                </form>
-                <span class="navbar-text ms-3">
-                    <a href="{% url 'user-detail' request.user.id %}">
-                    {{ request.user.last_name }} {{ request.user.first_name }}
-                    </a>
-                </span>
                 {% if user.is_authenticated %}
-                <form action="{% url 'logout' %}" class="mx-3" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Вихід</button>
-                </form>
-                {% else %}
-                <a href="{% url 'login' %}">Вхід</a>
+                    <li class="nav-item">
+                        <a class="nav-link text-neon-hover" href="{% url 'my-courses' %}">Доступні курси</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-neon-hover" href="{% url 'assignment_list'%}">Список всіх задач</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-neon-hover" href="{% url 'submission_list'%}">Список задач на виконання</a>
+                    </li>
                 {% endif %}
-            </div>
-        </div>
-    </nav>
-    <div class="row">
-        <div class="col">
-            <p></p>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-4">
-                {% block content %}{% endblock %}
-            </div>
-        </div>
-        <p></p>
-    </div>
+            </ul>
 
-    <footer></footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            {% if user.is_authenticated %}
+            <span class="navbar-text ms-3 d-flex align-items-center">
+                {% if request.user.profile.avatar %}
+                    <img src="{{ request.user.profile.avatar.url }}"
+                         class="rounded-circle me-2"
+                         width="40" height="40"
+                         style="object-fit: cover; border: 2px solid #bf00ff;">
+                {% endif %}
+                <a href="{% url 'user-detail' request.user.id %}" class="text-white text-decoration-none text-neon-hover">
+                    {{ request.user.last_name }} {{ request.user.first_name }}
+                </a>
+            </span>
+            <form action="{% url 'logout' %}" class="mx-3" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-neon-hover">Вихід</button>
+            </form>
+            {% else %}
+            <a href="{% url 'login' %}" class="text-neon-hover">Вхід</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<!-- Контент -->
+<div class="container my-4">
+    {% block content %}{% endblock %}
+</div>
+
+<!-- Footer -->
+<footer class="text-center text-muted py-3">
+    &copy; 2026 Moodle-like LMS
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
-</body>
 
+</body>
 </html>

@@ -14,18 +14,39 @@ def lessons_list_view(request):
 
 
 
+from django.shortcuts import render, get_object_or_404, redirect
+from . import models
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Lesson
+
 def lesson_detail_view(request, pk):
-    if request.method == 'GET':
-        lesson = get_object_or_404(models.Lesson, pk=pk)
-        module = lesson.module
-        course = module.course
-        # assignments = lesson.assignments.all()
-        context = {}
-        context['lesson'] = lesson
-        context['module'] = module
-        context['course'] = course
-        # context['assignments'] = assignments
-        return render(request,'lessons/lesson_detail.html', context)
+    lesson = get_object_or_404(Lesson, pk=pk)
+    module = lesson.module
+    course = module.course
+
+    if request.method == 'POST':
+        uploaded_file = request.FILES.get('file')  # отримуємо файл з форми
+
+        if uploaded_file:
+            lesson.content = uploaded_file  # зберігаємо файл
+            lesson.save()  # обовʼязково save
+
+        return redirect('lesson-detail', pk=lesson.pk)  # оновлюємо сторінку
+
+    context = {
+        'lesson': lesson,
+        'module': module,
+        'course': course,
+    }
+    return render(request, 'lessons/lesson_detail.html', context)
+
+def lesson_delete_file(request, pk):
+    lesson = get_object_or_404(Lesson, pk=pk)
+
+    if request.method == "POST":
+        lesson.content.delete(save=True)
+    return redirect('lesson-detail', pk=lesson.pk)
 
 
 

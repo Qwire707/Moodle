@@ -7,7 +7,7 @@ from accounts.models import CustomUser
 class Lesson(models.Model):
     module = models.ForeignKey(Module, on_delete=models.CASCADE, verbose_name='lessons', related_name='lessons')
     title = models.CharField(max_length=100)
-    content = models.ImageField()
+    content = models.FileField(upload_to='lessons/', null=True, blank=True)
     image = models.ImageField(upload_to='lessons/images/', blank=True, null=True, verbose_name='image')
     video_url = models.URLField(blank=True, null=True, verbose_name='video url')
     order = models.PositiveIntegerField(default=0, verbose_name='order')

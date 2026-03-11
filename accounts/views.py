@@ -18,9 +18,6 @@ class UserLoginView(LoginView):
     template_name = "accounts/login.html"
     authentication_form = LoginForm
 
-    def get_success_url(self):
-        return reverse_lazy("profile")
-
 
 class UserDetailView(LoginRequiredMixin, DetailView):
     model = CustomUser
